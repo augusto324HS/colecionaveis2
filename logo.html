@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aurum — Colecionáveis Preto & Dourado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0c0c10;
+      --bg2:#14141a;
+      --text:#f6f6f8;
+      --muted:#cfcfd6;
+      --gold:#d4af37;
+      --gold-2:#b9952b;
+      --gold-soft:#e0c45a;
+      --card:#16161c;
+      --accent:#1b1b22;
+      --ok:#2ecc71;
+      --err:#ff4d4f;
+      --blue:#4da6ff;
+      --pink:#ff68b4;
+      --vio:#b07cff;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0; padding:0; min-height:100%;
+      background: radial-gradient(1200px 700px at 20% 0%, #1a1a22 0%, var(--bg) 60%);
+      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+
+    /* Header / Logo com animação */
+    header{
+      position:sticky; top:0; z-index:100;
+      background:linear-gradient(180deg, rgba(20,20,24,0.9) 0%, rgba(20,20,24,0.65) 100%);
+      border-bottom:1px solid rgba(212,175,55,0.2);
+      backdrop-filter:blur(6px);
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 22px;
+    }
+    .brand{display:flex; align-items:center; gap:12px;}
+    .brand-mark{
+      width:44px; height:44px; border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 60%),
+        radial-gradient(60px 60px at 80% 80%, rgba(0,0,0,0.25), transparent 60%);
+      box-shadow: 0 0 14px rgba(212,175,55,0.35), inset 0 0 12px rgba(0,0,0,0.6);
+      position:relative; overflow:hidden;
+    }
+    .brand-mark::after{
+      content:""; position:absolute; left:-130%; top:0; width:120%; height:100%;
+      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+      transform:skewX(-20deg); animation:shineSweep 3200ms linear infinite;
+    }
+    .brand-title{
+      text-transform:uppercase; letter-spacing:0.8px; font-weight:800; color:var(--gold);
+    }
+    @keyframes shineSweep{0%{left:-120%}55%{left:120%}100%{left:120%}}
+    nav{display:flex; gap:8px; flex-wrap:wrap}
+    .nav-btn{
+      border:1px solid rgba(212,175,55,0.35);
+      color:var(--gold-soft);
+      background:linear-gradient(180deg, #16161d 0%, #121217 100%);
+      padding:10px 14px; border-radius:10px; cursor:pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, color 160ms ease;
+      font-weight:600; white-space:nowrap;
+    }
+    .nav-btn:hover{transform:translateY(-1px); box-shadow:0 10px 20px rgba(0,0,0,0.35)}
+    .nav-btn.active{
+      color:var(--text); border-color:var(--gold);
+      box-shadow:0 0 0 2px rgba(212,175,55,0.12), 0 12px 26px rgba(212,175,55,0.08);
+    }
+
+    /* Container & sections */
+    .container{max-width:1250px; margin:22px auto; padding:0 22px 40px;}
+    .section{display:none; animation:fadeIn 380ms ease both;}
+    .section.active{display:block;}
+    @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+    h1{color:var(--gold); margin:8px 0 12px; text-shadow:0 0 24px rgba(212,175,55,0.18)}
+    h2{color:var(--gold-soft); margin:6px 0 10px}
+    .subtitle{color:var(--muted); font-size:14px}
+
+    /* Panel / cards */
+    .panel{
+      background:linear-gradient(180deg, var(--card) 0%, var(--accent) 100%);
+      border:1px solid rgba(212,175,55,0.18); border-radius:14px; padding:16px; margin:14px 0;
+    }
+    .products-grid{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+    }
+    @media(max-width:1100px){.products-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:800px){.products-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:540px){.products-grid{grid-template-columns:1fr}}
+
+    .card{
+      background:linear-gradient(180deg, #181820 0%, #14141a 100%);
+      border:1px solid rgba(212,175,55,0.18); border-radius:14px; overflow:hidden;
+      transition:transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      position:relative;
+    }
+    .card:hover{transform:translateY(-3px); border-color:rgba(212,175,55,0.35); box-shadow:0 12px 28px rgba(0,0,0,0.45)}
+    .card-header{
+      height:150px; display:flex; align-items:center; justify-content:center;
+      color:var(--gold-soft); font-weight:800; letter-spacing:0.4px; text-align:center;
+      background: radial-gradient(280px 140px at 65% 40%, rgba(212,175,55,0.28), transparent 60%), linear-gradient(180deg, #0f0f13 0%, #14141a 100%);
+      border-bottom:1px solid rgba(212,175,55,0.18);
+    }
+    .rarity{
+      position:absolute; top:10px; left:10px; padding:6px 10px; border-radius:999px;
+      font-size:12px; font-weight:800; color:#0b0b0d; box-shadow:0 6px 12px rgba(0,0,0,0.25);
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-2) 100%);
+      border:1px solid rgba(212,175,55,0.5);
+      animation:floatR 2600ms ease-in-out infinite;
+    }
+    .rar-epic{background:linear-gradient(180deg, var(--vio) 0%, #6d49c9 100%); color:#fff}
+    .rar-legendary{background:linear-gradient(180deg, #ff9f1a 0%, #ff6a00 100%); color:#0b0b0d}
+    .rar-rare{background:linear-gradient(180deg, var(--blue) 0%, #1f72cc 100%); color:#fff}
+    @keyframes floatR{0%{transform:translateY(0)}50%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+    .card-body{padding:12px; display:grid; gap:8px}
+    .meta{display:flex; align-items:center; justify-content:space-between}
+    .price{color:var(--gold); font-weight:800}
+    .stock{color:var(--muted); font-size:12px}
+    .btn-row{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+    .btn{
+      border:1px solid rgba(212,175,55,0.35);
+      color:var(--text); background:linear-gradient(180deg, #1a1a22 0%, #121217 100%);
+      padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:600;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+    .btn:hover{transform:translateY(-1px); border-color:var(--gold); color:var(--gold-soft); box-shadow:0 8px 18px rgba(212,175,55,0.12)}
+    .btn-primary{
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-2) 100%);
+      color:#0b0b0d; border-color:rgba(212,175,55,0.65);
+    }
+    .btn-primary:hover{color:#0b0b0d; box-shadow:0 10px 22px rgba(212,175,55,0.25)}
+
+    /* Tables */
+    table{width:100%; border-collapse:collapse; border-radius:12px; overflow:hidden}
+    thead th{
+      background:#17171f; color:var(--gold-soft); font-weight:800; padding:12px; text-align:left;
+      border-bottom:1px solid rgba(212,175,55,0.22);
+    }
+    tbody td{padding:10px 12px; border-bottom:1px solid rgba(212,175,55,0.12)}
+    tbody tr:hover{background:rgba(212,175,55,0.06)}
+
+    /* Forms */
+    form{display:grid; gap:12px}
+    .form-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .form-group{display:grid; gap:6px}
+    label{font-size:13px; color:var(--gold-soft)}
+    input, select, textarea{
+      background:#101015; color:var(--text); border:1px solid rgba(212,175,55,0.25);
+      border-radius:10px; padding:10px 12px; outline:none;
+      transition:border-color 140ms ease, box-shadow 140ms ease;
+    }
+    input:focus, select:focus, textarea:focus{border-color:var(--gold); box-shadow:0 0 0 2px rgba(212,175,55,0.12)}
+    .helper{font-size:12px; color:var(--muted)}
+
+    /* Filters / categories */
+    .filters{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
+    .filter-chip{
+      border:1px solid rgba(212,175,55,0.35); border-radius:999px; padding:6px 10px; cursor:pointer;
+      color:var(--gold-soft); background:linear-gradient(180deg, #16161d 0%, #121217 100%);
+      transition:transform 120ms ease, border-color 120ms ease, color 120ms ease;
+      font-weight:700; font-size:12px;
+    }
+    .filter-chip.active{border-color:var(--gold); color:var(--text)}
+
+    /* Cart bar / badges */
+    .cart-bar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:10px 14px; border:1px solid rgba(212,175,55,0.18); border-radius:12px;
+      background:linear-gradient(180deg, #15151b 0%, #121217 100%);
+    }
+    .badge{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:24px; height:24px; padding:0 8px; border-radius:999px;
+      font-size:12px; font-weight:800; color:#0b0b0d;
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-2) 100%);
+      box-shadow:0 6px 12px rgba(212,175,55,0.25);
+    }
+
+    /* Toast */
+    .toast{
+      position:fixed; bottom:24px; left:24px; min-width:240px;
+      background:#121217; border:1px solid rgba(212,175,55,0.35);
+      color:var(--text); padding:12px 14px; border-radius:12px;
+      box-shadow:0 12px 24px rgba(0,0,0,0.45); display:none; animation:popIn 240ms ease;
+    }
+    @keyframes popIn{from{transform:translateY(8px); opacity:0} to{transform:translateY(0); opacity:1}}
+
+    /* Footer */
+    footer{
+      padding:26px 22px 36px; text-align:center; color:var(--muted);
+      border-top:1px solid rgba(212,175,55,0.12);
+      background:linear-gradient(180deg, rgba(20,20,24,0.35) 0%, rgba(20,20,24,0.15) 100%);
+    }
+    .footer-brand{color:var(--gold-soft); font-weight:800}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <div class="brand-title">Aurum</div>
+          <div class="subtitle">Colecionáveis — Preto & Dourado</div>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-target="produtos">Produtos</button>
+        <button class="nav-btn" data-target="raridades">Raridades</button>
+        <button class="nav-btn" data-target="minha-colecao">Minha coleção</button>
+        <button class="nav-btn" data-target="categorias">Categorias</button>
+        <button class="nav-btn" data-target="comunidade">Comunidade</button>
+        <button class="nav-btn" data-target="cadastro-cliente">Cadastro de cliente</button>
+        <button class="nav-btn" data-target="cadastro-produto">Cadastro de produto</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Cart bar -->
+    <div class="cart-bar panel" id="cartBar">
+      <div><strong>Carrinho:</strong> <span id="cartCount" class="badge">0</span> itens</div>
+      <div><strong>Total:</strong> <span id="cartTotal" style="color:var(--gold); font-weight:800;">R$ 0,00</span></div>
+      <div style="display:flex; gap:8px">
+        <button class="btn" id="clearCartBtn">Limpar</button>
+        <button class="btn btn-primary" id="checkoutBtn">Finalizar</button>
+      </div>
+    </div>
+
+    <!-- Produtos -->
+    <section id="produtos" class="section active">
+      <h1>Produtos</h1>
+      <p class="subtitle">50 itens com botões, micro animações e etiquetas de raridade.</p>
+
+      <div class="filters" id="productFilters">
+        <span class="filter-chip active" data-cat="all">Todos</span>
+        <span class="filter-chip" data-cat="figuras">Figuras</span>
+        <span class="filter-chip" data-cat="moedas">Moedas</span>
+        <span class="filter-chip" data-cat="posters">Posters</span>
+        <span class="filter-chip" data-cat="miniaturas">Miniaturas</span>
+        <span class="filter-chip" data-cat="cartas">Cartas</span>
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        <!-- 50 cards (P001..P050) com categorias e raridade -->
+        <!-- 1 -->
+       <!-- 1 -->
+<div class="card" data-cat="figuras">
+  <div class="rarity rar-legendary">Lendário</div>
+  <div class="card-header">
+    <img src="imagens/cavaleiro-dourado.jpg" alt="Estátua Cavaleiro Dourado" style="max-height:140px; border-radius:8px;">
+    <div>Estátua — Cavaleiro Dourado</div>
+  </div>
+  <div class="card-body">
+    <div class="meta">
+      <span class="helper">Edição limitada com base iluminada.</span>
+      <span class="price" data-price="899.9">R$ 899,90</span>
+    </div>
+    <div class="stock">Estoque: 12</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-id="P001">Adicionar</button>
+      <button class="btn" data-view="P001">Detalhes</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="card" data-cat="cartas">
+  <div class="rarity rar-epic">Épico</div>
+  <div class="card-header">
+    <img src="imagens/carta-lendaria.jpg" alt="Carta Rara Lendária" style="max-height:140px; border-radius:8px;">
+    <div>Carta Rara — Lendária</div>
+  </div>
+  <div class="card-body">
+    <div class="meta">
+      <span class="helper">Slab acrílico, nota 9.5.</span>
+      <span class="price" data-price="899">R$ 899,00</span>
+    </div>
+    <div class="stock">Estoque: 3</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-id="P002">Adicionar</button>
+      <button class="btn" data-view="P002">Detalhes</button>
+    </div>
+  </div>
+</div>
+
+        <!-- 3 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Miniatura — Carro 1969</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Escala 1:18 metálica.</span>
+              <span class="price" data-price="329">R$ 329,00</span>
+            </div>
+            <div class="stock">Estoque: 8</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P003">Adicionar</button>
+              <button class="btn" data-view="P003">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 4 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Série Imperiais</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Com certificado de autenticidade.</span>
+              <span class="price" data-price="219.9">R$ 219,90</span>
+            </div>
+            <div class="stock">Estoque: 50</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P004">Adicionar</button>
+              <button class="btn" data-view="P004">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 5 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Action Figure — Guerreiro Estelar</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Acessórios premium.</span>
+              <span class="price" data-price="449.9">R$ 449,90</span>
+            </div>
+            <div class="stock">Estoque: 20</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P005">Adicionar</button>
+              <button class="btn" data-view="P005">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 6 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Edição Ouro</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Metalizado, alta gramatura.</span>
+              <span class="price" data-price="99.9">R$ 99,90</span>
+            </div>
+            <div class="stock">Estoque: 100</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P006">Adicionar</button>
+              <button class="btn" data-view="P006">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 7 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Placa Decorativa — Vintage</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Acabamento escovado ouro.</span>
+              <span class="price" data-price="79.9">R$ 79,90</span>
+            </div>
+            <div class="stock">Estoque: 64</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P007">Adicionar</button>
+              <button class="btn" data-view="P007">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 8 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-legendary">Lendário</div>
+          <div class="card-header">Réplica — Helm Dourado</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Tamanho real acolchoado.</span>
+              <span class="price" data-price="1199">R$ 1.199,00</span>
+            </div>
+            <div class="stock">Estoque: 5</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P008">Adicionar</button>
+              <button class="btn" data-view="P008">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 9 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Moeda — Coroa 24k</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Banhada a ouro 24k.</span>
+              <span class="price" data-price="249.9">R$ 249,90</span>
+            </div>
+            <div class="stock">Estoque: 38</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P009">Adicionar</button>
+              <button class="btn" data-view="P009">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 10 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-epic">Épico</div>
+          <div class="card-header">Estátua — Dragão Imperial</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Base LED âmbar.</span>
+              <span class="price" data-price="999">R$ 999,00</span>
+            </div>
+            <div class="stock">Estoque: 7</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P010">Adicionar</button>
+              <button class="btn" data-view="P010">Detalhes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Assinado #11</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Assinado pelo artista.</span>
+              <span class="price" data-price="179.9">R$ 179,90</span>
+            </div>
+            <div class="stock">Estoque: 22</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P011">Adicionar</button>
+              <button class="btn" data-view="P011">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 12 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Moto Clássica</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Escala 1:12.</span>
+              <span class="price" data-price="219">R$ 219,00</span>
+            </div>
+            <div class="stock">Estoque: 25</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P012">Adicionar</button>
+              <button class="btn" data-view="P012">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 13 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Action Figure — Guardião</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Capa tecido premium.</span>
+              <span class="price" data-price="389">R$ 389,00</span>
+            </div>
+            <div class="stock">Estoque: 14</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P013">Adicionar</button>
+              <button class="btn" data-view="P013">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 14 -->
+        <div class="card" data-cat="acessorios">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Pin — Emblema Dourado</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Fecho magnético.</span>
+              <span class="price" data-price="49.9">R$ 49,90</span>
+            </div>
+            <div class="stock">Estoque: 120</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P014">Adicionar</button>
+              <button class="btn" data-view="P014">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 15 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Moeda — Série Animus</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Baixo relevo numerado.</span>
+              <span class="price" data-price="199.9">R$ 199,90</span>
+            </div>
+            <div class="stock">Estoque: 60</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P015">Adicionar</button>
+              <button class="btn" data-view="P015">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 16 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Ouro & Ébano</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Laminação matte.</span>
+              <span class="price" data-price="129">R$ 129,00</span>
+            </div>
+            <div class="stock">Estoque: 48</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P016">Adicionar</button>
+              <button class="btn" data-view="P016">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 17 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Nave Explorer</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Peças móveis e base.</span>
+              <span class="price" data-price="279.9">R$ 279,90</span>
+            </div>
+            <div class="stock">Estoque: 26</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P017">Adicionar</button>
+              <button class="btn" data-view="P017">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 18 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-epic">Épico</div>
+          <div class="card-header">Figura — Alquimista Dourado</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Tinta metalizada.</span>
+              <span class="price" data-price="419.9">R$ 419,90</span>
+            </div>
+            <div class="stock">Estoque: 17</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P018">Adicionar</button>
+              <button class="btn" data-view="P018">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 19 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Comando Real</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Edição 2025.</span>
+              <span class="price" data-price="229">R$ 229,00</span>
+            </div>
+            <div class="stock">Estoque: 70</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P019">Adicionar</button>
+              <button class="btn" data-view="P019">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 20 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Estátua — Fênix Ascendente</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Âmbar translúcido.</span>
+              <span class="price" data-price="799">R$ 799,00</span>
+            </div>
+            <div class="stock">Estoque: 9</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P020">Adicionar</button>
+              <button class="btn" data-view="P020">Detalhes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 21 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Geométrico #21</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Edição numerada.</span>
+              <span class="price" data-price="139.9">R$ 139,90</span>
+            </div>
+            <div class="stock">Estoque: 44</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P021">Adicionar</button>
+              <button class="btn" data-view="P021">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 22 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Locomotiva</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Escala 1:87.</span>
+              <span class="price" data-price="359.9">R$ 359,90</span>
+            </div>
+            <div class="stock">Estoque: 19</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P022">Adicionar</button>
+              <button class="btn" data-view="P022">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 23 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Action Figure — Paladino</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Escudo articulado.</span>
+              <span class="price" data-price="399.9">R$ 399,90</span>
+            </div>
+            <div class="stock">Estoque: 16</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P023">Adicionar</button>
+              <button class="btn" data-view="P023">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 24 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Cometa Áureo</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Acabamento proof.</span>
+              <span class="price" data-price="189.9">R$ 189,90</span>
+            </div>
+            <div class="stock">Estoque: 80</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P024">Adicionar</button>
+              <button class="btn" data-view="P024">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 25 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Horizonte Dourado</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Papel algodão 300g.</span>
+              <span class="price" data-price="159.9">R$ 159,90</span>
+            </div>
+            <div class="stock">Estoque: 52</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P025">Adicionar</button>
+              <button class="btn" data-view="P025">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 26 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Jato Supersônico</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Suporte acrílico.</span>
+              <span class="price" data-price="299.9">R$ 299,90</span>
+            </div>
+            <div class="stock">Estoque: 21</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P026">Adicionar</button>
+              <button class="btn" data-view="P026">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 27 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-epic">Épico</div>
+          <div class="card-header">Figura — Sentinela Dourada</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Base com fumaça.</span>
+              <span class="price" data-price="439.9">R$ 439,90</span>
+            </div>
+            <div class="stock">Estoque: 13</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P027">Adicionar</button>
+              <button class="btn" data-view="P027">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 28 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Atlas</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Borda chanfrada.</span>
+              <span class="price" data-price="209.9">R$ 209,90</span>
+            </div>
+            <div class="stock">Estoque: 55</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P028">Adicionar</button>
+              <button class="btn" data-view="P028">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 29 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Constelação Áurea</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Pigmento metálico.</span>
+              <span class="price" data-price="169.9">R$ 169,90</span>
+            </div>
+            <div class="stock">Estoque: 36</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P029">Adicionar</button>
+              <button class="btn" data-view="P029">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 30 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Tanque</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Escala 1:35.</span>
+              <span class="price" data-price="339.9">R$ 339,90</span>
+            </div>
+            <div class="stock">Estoque: 24</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P030">Adicionar</button>
+              <button class="btn" data-view="P030">Detalhes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 31 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Figura — Campeão Solar</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Textura armadura.</span>
+              <span class="price" data-price="459.9">R$ 459,90</span>
+            </div>
+            <div class="stock">Estoque: 12</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P031">Adicionar</button>
+              <button class="btn" data-view="P031">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 32 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Navegação</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Mapa em relevo.</span>
+              <span class="price" data-price="199">R$ 199,00</span>
+            </div>
+            <div class="stock">Estoque: 66</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P032">Adicionar</button>
+              <button class="btn" data-view="P032">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 33 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Relâmpago Dourado</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Verniz localizado.</span>
+              <span class="price" data-price="149">R$ 149,00</span>
+            </div>
+            <div class="stock">Estoque: 58</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P033">Adicionar</button>
+              <button class="btn" data-view="P033">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 34 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Submarino</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Placa dourada.</span>
+              <span class="price" data-price="309.9">R$ 309,90</span>
+            </div>
+            <div class="stock">Estoque: 23</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P034">Adicionar</button>
+              <button class="btn" data-view="P034">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 35 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-epic">Épico</div>
+          <div class="card-header">Figura — Mestre do Tempo</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Relógio na base.</span>
+              <span class="price" data-price="489.9">R$ 489,90</span>
+            </div>
+            <div class="stock">Estoque: 11</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P035">Adicionar</button>
+              <button class="btn" data-view="P035">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 36 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Símbolo Solar</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Averso polido.</span>
+              <span class="price" data-price="189">R$ 189,00</span>
+            </div>
+            <div class="stock">Estoque: 72</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P036">Adicionar</button>
+              <button class="btn" data-view="P036">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 37 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Rota Estelar</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Tintas UV.</span>
+              <span class="price" data-price="169">R$ 169,00</span>
+            </div>
+            <div class="stock">Estoque: 47</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P037">Adicionar</button>
+              <button class="btn" data-view="P037">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 38 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Caminhão</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Portas móveis.</span>
+              <span class="price" data-price="289">R$ 289,00</span>
+            </div>
+            <div class="stock">Estoque: 29</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P038">Adicionar</button>
+              <button class="btn" data-view="P038">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 39 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-epic">Épico</div>
+          <div class="card-header">Figura — Guardião da Aurora</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Efeito luz na capa.</span>
+              <span class="price" data-price="469.9">R$ 469,90</span>
+            </div>
+            <div class="stock">Estoque: 10</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P039">Adicionar</button>
+              <button class="btn" data-view="P039">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 40 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Mare Nostrum</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Mapa marítimo.</span>
+              <span class="price" data-price="219">R$ 219,00</span>
+            </div>
+            <div class="stock">Estoque: 68</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P040">Adicionar</button>
+              <button class="btn" data-view="P040">Detalhes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 41 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Aurora Áurea</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Lâmina dourada.</span>
+              <span class="price" data-price="159">R$ 159,00</span>
+            </div>
+            <div class="stock">Estoque: 53</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P041">Adicionar</button>
+              <button class="btn" data-view="P041">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 42 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Balsa Antiga</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Cordas reais.</span>
+              <span class="price" data-price="259.9">R$ 259,90</span>
+            </div>
+            <div class="stock">Estoque: 27</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P042">Adicionar</button>
+              <button class="btn" data-view="P042">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 43 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Figura — Sombra Radiante</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Preto & ouro.</span>
+              <span class="price" data-price="449">R$ 449,00</span>
+            </div>
+            <div class="stock">Estoque: 15</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P043">Adicionar</button>
+              <button class="btn" data-view="P043">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 44 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Pilar Dourado</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Espelhada.</span>
+              <span class="price" data-price="199.9">R$ 199,90</span>
+            </div>
+            <div class="stock">Estoque: 62</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P044">Adicionar</button>
+              <button class="btn" data-view="P044">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 45 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Horizonte Preto</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Matte profundo.</span>
+              <span class="price" data-price="139">R$ 139,00</span>
+            </div>
+            <div class="stock">Estoque: 59</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P045">Adicionar</button>
+              <button class="btn" data-view="P045">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 46 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Miniatura — Dirigível</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Acetinado.</span>
+              <span class="price" data-price="299">R$ 299,00</span>
+            </div>
+            <div class="stock">Estoque: 22</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P046">Adicionar</button>
+              <button class="btn" data-view="P046">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 47 -->
+        <div class="card" data-cat="figuras">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Figura — Cavaleiro das Sombras</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Dourado fosco.</span>
+              <span class="price" data-price="429.9">R$ 429,90</span>
+            </div>
+            <div class="stock">Estoque: 18</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P047">Adicionar</button>
+              <button class="btn" data-view="P047">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 48 -->
+        <div class="card" data-cat="moedas">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Moeda — Emblema Supremo</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Caixa luxo + certificado.</span>
+              <span class="price" data-price="259.9">R$ 259,90</span>
+            </div>
+            <div class="stock">Estoque: 58</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P048">Adicionar</button>
+              <button class="btn" data-view="P048">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 49 -->
+        <div class="card" data-cat="posters">
+          <div class="rarity">Comum</div>
+          <div class="card-header">Poster — Nebulosa Ouro</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Pigmentos premium.</span>
+              <span class="price" data-price="149.9">R$ 149,90</span>
+            </div>
+            <div class="stock">Estoque: 41</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P049">Adicionar</button>
+              <button class="btn" data-view="P049">Detalhes</button>
+            </div>
+          </div>
+        </div>
+        <!-- 50 -->
+        <div class="card" data-cat="miniaturas">
+          <div class="rarity rar-rare">Raro</div>
+          <div class="card-header">Miniatura — Dirigível Lux</div>
+          <div class="card-body">
+            <div class="meta">
+              <span class="helper">Base acrílica.</span>
+              <span class="price" data-price="319">R$ 319,00</span>
+            </div>
+            <div class="stock">Estoque: 20</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" data-id="P050">Adicionar</button>
+              <button class="btn" data-view="P050">Detalhes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raridades -->
+    <section id="raridades" class="section">
+      <h1>Raridades</h1>
+      <p class="subtitle">Itens classificados por raridade: Comum, Raro, Épico e Lendário.</p>
+      <div class="panel">
+        <div class="filters" id="rarityFilters">
+          <span class="filter-chip active" data-rar="all">Todas</span>
+          <span class="filter-chip" data-rar="Comum">Comum</span>
+          <span class="filter-chip" data-rar="Raro">Raro</span>
+          <span class="filter-chip" data-rar="Épico">Épico</span>
+          <span class="filter-chip" data-rar="Lendário">Lendário</span>
+        </div>
+        <div class="products-grid" id="raritiesGrid"><!-- render via JS --></div>
+      </div>
+    </section>
+
+    <!-- Minha coleção -->
+    <section id="minha-colecao" class="section">
+      <h1>Minha coleção</h1>
+      <p class="subtitle">Salve itens que você possui ou deseja. Gerencie e organize sua coleção.</p>
+      <div class="panel">
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+          <button class="btn" id="addFromCartToCollection">Adicionar do carrinho</button>
+          <button class="btn" id="clearCollection">Limpar coleção</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Itens na coleção</h2>
+        <table>
+          <thead><tr><th>Item</th><th>Qtd</th><th>Raridade</th><th>Ações</th></tr></thead>
+          <tbody id="collectionTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Categorias -->
+    <section id="categorias" class="section">
+      <h1>Categorias</h1>
+      <p class="subtitle">Navegue por categorias e descubra produtos relacionados.</p>
+      <div class="panel">
+        <div class="filters">
+          <span class="filter-chip active" data-catx="all">Todas</span>
+          <span class="filter-chip" data-catx="figuras">Figuras</span>
+          <span class="filter-chip" data-catx="moedas">Moedas</span>
+          <span class="filter-chip" data-catx="posters">Posters</span>
+          <span class="filter-chip" data-catx="miniaturas">Miniaturas</span>
+          <span class="filter-chip" data-catx="cartas">Cartas</span>
+          <span class="filter-chip" data-catx="acessorios">Acessórios</span>
+        </div>
+        <div class="products-grid" id="categoriesGrid"><!-- render via JS --></div>
+      </div>
+    </section>
+
+    <!-- Comunidade -->
+    <section id="comunidade" class="section">
+      <h1>Comunidade</h1>
+      <p class="subtitle">Compartilhe aquisições, reviews e trocas com outros colecionadores.</p>
+      <div class="panel">
+        <form id="communityForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="postAutor">Seu nome</label>
+              <input id="postAutor" placeholder="Ex: Augusto" />
+            </div>
+            <div class="form-group">
+              <label for="postTitulo">Título do post</label>
+              <input id="postTitulo" placeholder="Ex: Minha nova Fênix Ascendente" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="postConteudo">Conteúdo</label>
+            <textarea id="postConteudo" rows="3" placeholder="Compartilhe detalhes do item, raridade, preço, etc."></textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px">
+            <button type="reset" class="btn">Limpar</button>
+            <button type="submit" class="btn btn-primary">Publicar</button>
+          </div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Feed da comunidade</h2>
+        <table>
+          <thead><tr><th>Autor</th><th>Título</th><th>Conteúdo</th><th>Ações</th></tr></thead>
+          <tbody id="communityFeedBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Cadastro de cliente -->
+    <section id="cadastro-cliente" class="section">
+      <h1>Cadastro de cliente</h1>
+      <p class="subtitle">Preencha os dados do cliente. Campos principais são obrigatórios.</p>
+      <div class="panel">
+        <form id="customerForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cliNome">Nome completo</label>
+              <input id="cliNome" required placeholder="Ex: Augusto Ribeiro" />
+            </div>
+            <div class="form-group">
+              <label for="cliCpf">CPF</label>
+              <input id="cliCpf" required placeholder="000.000.000-00" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cliEmail">Email</label>
+              <input id="cliEmail" type="email" required placeholder="exemplo@dominio.com" />
+            </div>
+            <div class="form-group">
+              <label for="cliTelefone">Telefone</label>
+              <input id="cliTelefone" placeholder="(41) 99999-9999" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cliEndereco">Endereço</label>
+              <input id="cliEndereco" placeholder="Rua, número, complemento" />
+            </div>
+            <div class="form-group">
+              <label for="cliCidade">Cidade</label>
+              <input id="cliCidade" placeholder="Curitiba" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cliEstado">Estado</label>
+              <select id="cliEstado">
+                <option value="">Selecione</option>
+                <option>PR</option><option>SC</option><option>RS</option><option>SP</option>
+                <option>RJ</option><option>MG</option><option>BA</option><option>PE</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cliCep">CEP</label>
+              <input id="cliCep" placeholder="00000-000" />
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px">
+            <button type="reset" class="btn">Limpar</button>
+            <button type="submit" class="btn btn-primary">Salvar cliente</button>
+          </div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Clientes cadastrados</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th><th>CPF</th><th>Email</th><th>Telefone</th><th>Cidade</th>
+            </tr>
+          </thead>
+          <tbody id="customersTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Cadastro de produto -->
+    <section id="cadastro-produto" class="section">
+      <h1>Cadastro de produto</h1>
+      <p class="subtitle">Inclua novos itens na vitrine com preço, estoque, raridade e categoria.</p>
+      <div class="panel">
+        <form id="productForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodNome">Nome do produto</label>
+              <input id="prodNome" required placeholder="Ex: Figura — Lâmina Dourada" />
+            </div>
+            <div class="form-group">
+              <label for="prodPreco">Preço (R$)</label>
+              <input id="prodPreco" type="number" step="0.01" required placeholder="0.00" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodEstoque">Estoque</label>
+              <input id="prodEstoque" type="number" required placeholder="0" />
+            </div>
+            <div class="form-group">
+              <label for="prodCategoria">Categoria</label>
+              <select id="prodCategoria">
+                <option value="figuras">Figuras</option>
+                <option value="moedas">Moedas</option>
+                <option value="posters">Posters</option>
+                <option value="miniaturas">Miniaturas</option>
+                <option value="cartas">Cartas</option>
+                <option value="acessorios">Acessórios</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodRaridade">Raridade</label>
+              <select id="prodRaridade">
+                <option>Comum</option><option>Raro</option><option>Épico</option><option>Lendário</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="prodDescricao">Descrição</label>
+              <input id="prodDescricao" placeholder="Breve descrição do produto" />
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px">
+            <button type="reset" class="btn">Limpar</button>
+            <button type="submit" class="btn btn-primary">Salvar produto</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <footer>
+    <div class="footer-brand">Aurum</div>
+    <div class="subtitle">Preto & Dourado, feito para colecionadores. Brilho na medida certa.</div>
+  </footer>
+
+  <script>
+    // Helpers
+    const formatBRL = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+    const qs = (s,el=document)=>el.querySelector(s);
+    const qsa = (s,el=document)=>[...el.querySelectorAll(s)];
+
+    // Nav
+    qsa(".nav-btn").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        qsa(".nav-btn").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        const target = btn.dataset.target;
+        qsa(".section").forEach(sec=>sec.classList.remove("active"));
+        qs("#"+target).classList.add("active");
+        if(target==="raridades") renderRarities();
+        if(target==="categorias") renderCategories();
+      });
+    });
+
+    // Toast
+    const toastEl = qs("#toast");
+    let toastTimer=null;
+    function toast(msg,type="info"){
+      toastEl.textContent = msg;
+      toastEl.style.borderColor = type==="error" ? "rgba(255,77,79,0.45)" : "rgba(212,175,55,0.45)";
+      toastEl.style.display = "block";
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>toastEl.style.display="none", 2200);
+    }
+
+    // Cart
+    const cart = new Map(); // id -> {name, price, qty, rarity}
+    function updateCartBar(){
+      const count = [...cart.values()].reduce((s,it)=>s+it.qty,0);
+      const total = [...cart.values()].reduce((s,it)=>s+it.qty*it.price,0);
+      qs("#cartCount").textContent = count;
+      qs("#cartTotal").textContent = formatBRL(total);
+    }
+    function addToCart(id,name,price,rarity="Comum"){
+      if(!cart.has(id)) cart.set(id,{name,price,qty:0,rarity});
+      cart.get(id).qty += 1;
+      updateCartBar();
+      toast(`${name} adicionado ao carrinho.`);
+    }
+    function changeQty(id,delta){
+      if(!cart.has(id)) return;
+      const it = cart.get(id);
+      it.qty = Math.max(1, it.qty + delta);
+      updateCartBar();
+    }
+    function removeFromCart(id){
+      if(cart.has(id)){ cart.delete(id); updateCartBar(); toast("Item removido."); }
+    }
+    qs("#clearCartBtn").addEventListener("click",()=>{
+      cart.clear(); updateCartBar(); toast("Carrinho limpo.");
+    });
+    qs("#checkoutBtn").addEventListener("click",()=>{
+      if(cart.size===0){ toast("Carrinho vazio.", "error"); return; }
+      const total = [...cart.values()].reduce((s,it)=>s+it.qty*it.price,0);
+      toast(`Compra finalizada: ${formatBRL(total)}.`);
+      cart.clear(); updateCartBar();
+    });
+
+    // Map Adicionar buttons
+    qsa('.card .btn-row .btn-primary').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const id = btn.dataset.id;
+        const card = btn.closest('.card');
+        const name = card.querySelector('.card-header').textContent.trim();
+        const price = parseFloat(card.querySelector('.price').dataset.price);
+        const rarEl = card.querySelector('.rarity');
+        const rarity = rarEl ? rarEl.textContent.trim() : "Comum";
+        addToCart(id,name,price,rarity);
+      });
+    });
+
+    // Filters (Produtos)
+    qsa('#productFilters .filter-chip').forEach(chip=>{
+      chip.addEventListener('click',()=>{
+        qsa('#productFilters .filter-chip').forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+        const cat = chip.dataset.cat;
+        qsa('#productsGrid .card').forEach(card=>{
+          card.style.display = (cat==="all" || card.dataset.cat===cat) ? "" : "none";
+        });
+      });
+    });
+
+    // Raridades render
+    function renderRarities(){
+      const grid = qs("#raritiesGrid");
+      grid.innerHTML = "";
+      qsa("#productsGrid .card").forEach(c=>{
+        const clone = c.cloneNode(true);
+        // desativa botões de adicionar para evitar duplicação de eventos
+        clone.querySelectorAll("button").forEach(b=>b.disabled=false);
+        grid.appendChild(clone);
+      });
+      // filtro de raridade
+      qsa('#rarityFilters .filter-chip').forEach(chip=>{
+        chip.onclick = ()=>{
+          qsa('#rarityFilters .filter-chip').forEach(c=>c.classList.remove('active'));
+          chip.classList.add('active');
+          const rar = chip.dataset.rar;
+          qsa('#raritiesGrid .card').forEach(card=>{
+            const tag = card.querySelector('.rarity')?.textContent.trim() || "Comum";
+            card.style.display = (rar==="all" || tag===rar) ? "" : "none";
+          });
+        };
+      });
+      // rebind botões adicionar na área de raridades
+      qsa('#raritiesGrid .btn-row .btn-primary').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const id = btn.dataset.id + "_R"; // sufixo para evitar colisão
+          const card = btn.closest('.card');
+          const name = card.querySelector('.card-header').textContent.trim();
+          const price = parseFloat(card.querySelector('.price').dataset.price);
+          const rarity = card.querySelector('.rarity')?.textContent.trim() || "Comum";
+          addToCart(id,name,price,rarity);
+        });
+      });
+    }
+
+    // Categorias render
+    function renderCategories(){
+      const grid = qs("#categoriesGrid");
+      grid.innerHTML = "";
+      qsa("#productsGrid .card").forEach(c=>{
+        const clone = c.cloneNode(true);
+        grid.appendChild(clone);
+      });
+      qsa('[data-catx]').forEach(chip=>{
+        chip.onclick = ()=>{
+          qsa('[data-catx]').forEach(c=>c.classList.remove('active'));
+          chip.classList.add('active');
+          const cat = chip.dataset.catx;
+          qsa('#categoriesGrid .card').forEach(card=>{
+            const cc = card.getAttribute('data-cat') || "misc";
+            card.style.display = (cat==="all" || cc===cat) ? "" : "none";
+          });
+        };
+      });
+      qsa('#categoriesGrid .btn-row .btn-primary').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const id = btn.dataset.id + "_C";
+          const card = btn.closest('.card');
+          const name = card.querySelector('.card-header').textContent.trim();
+          const price = parseFloat(card.querySelector('.price').dataset.price);
+          const rarity = card.querySelector('.rarity')?.textContent.trim() || "Comum";
+          addToCart(id,name,price,rarity);
+        });
+      });
+    }
+
+    // Minha coleção
+    const collection = new Map(); // id -> {name, qty, rarity}
+    function renderCollection(){
+      const tbody = qs("#collectionTableBody");
+      tbody.innerHTML = "";
+      collection.forEach((it,id)=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${it.name}</td>
+          <td>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <button class="btn" data-action="dec" data-id="${id}">-</button>
+              <span>${it.qty}</span>
+              <button class="btn" data-action="inc" data-id="${id}">+</button>
+            </div>
+          </td>
+          <td>${it.rarity}</td>
+          <td><button class="btn" data-action="rem" data-id="${id}">Remover</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      qsa('#collectionTableBody .btn').forEach(b=>{
+        const act = b.dataset.action;
+        const id = b.dataset.id;
+        b.onclick = ()=>{
+          if(act==="inc"){ collection.get(id).qty += 1; }
+          if(act==="dec"){ collection.get(id).qty = Math.max(1, collection.get(id).qty - 1); }
+          if(act==="rem"){ collection.delete(id); }
+          renderCollection();
+        };
+      });
+    }
+    qs("#addFromCartToCollection").addEventListener("click",()=>{
+      if(cart.size===0){ toast("Carrinho vazio para importar.", "error"); return; }
+      cart.forEach((it,id)=>{
+        const cid = "COL_"+id;
+        if(!collection.has(cid)) collection.set(cid,{name:it.name, qty:it.qty, rarity:it.rarity});
+        else collection.get(cid).qty += it.qty;
+      });
+      toast("Itens adicionados à coleção.");
+      renderCollection();
+    });
+    qs("#clearCollection").addEventListener("click",()=>{
+      collection.clear(); renderCollection(); toast("Coleção limpa.");
+    });
+
+    // Comunidade
+    const feed = [];
+    qs("#communityForm").addEventListener("submit",(e)=>{
+      e.preventDefault();
+      const autor = qs("#postAutor").value.trim() || "Colecionador";
+      const titulo = qs("#postTitulo").value.trim() || "Sem título";
+      const conteudo = qs("#postConteudo").value.trim() || "Sem conteúdo.";
+      feed.unshift({autor,titulo,conteudo});
+      renderCommunity();
+      e.target.reset();
+      toast("Post publicado!");
+    });
+    function renderCommunity(){
+      const tbody = qs("#communityFeedBody");
+      tbody.innerHTML = "";
+      feed.forEach((p,idx)=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.autor}</td>
+          <td>${p.titulo}</td>
+          <td>${p.conteudo}</td>
+          <td><button class="btn" data-idx="${idx}">Excluir</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      qsa('#communityFeedBody .btn').forEach(b=>{
+        b.onclick = ()=>{
+          const i = parseInt(b.dataset.idx,10);
+          feed.splice(i,1);
+          renderCommunity();
+          toast("Post excluído.");
+        };
+      });
+    }
+
+    // Cadastro de cliente
+    const customers = [];
+    qs("#customerForm").addEventListener("submit",(e)=>{
+      e.preventDefault();
+      const cliente = {
+        nome: qs("#cliNome").value.trim(),
+        cpf: qs("#cliCpf").value.trim(),
+        email: qs("#cliEmail").value.trim(),
+        telefone: qs("#cliTelefone").value.trim(),
+        cidade: qs("#cliCidade").value.trim(),
+      };
+      if(!cliente.nome || !cliente.cpf || !cliente.email){
+        toast("Preencha nome, CPF e email.", "error"); return;
+      }
+      customers.push(cliente);
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${cliente.nome}</td>
+        <td>${cliente.cpf}</td>
+        <td>${cliente.email}</td>
+        <td>${cliente.telefone || "-"}</td>
+        <td>${cliente.cidade || "-"}</td>
+      `;
+      qs("#customersTableBody").appendChild(tr);
+      e.target.reset();
+      toast("Cliente salvo.");
+    });
+
+    // Cadastro de produto -> add to grid com raridade e categoria
+    qs("#productForm").addEventListener("submit",(e)=>{
+      e.preventDefault();
+      const nome = qs("#prodNome").value.trim();
+      const preco = parseFloat(qs("#prodPreco").value);
+      const estoque = parseInt(qs("#prodEstoque").value,10);
+      const cat = qs("#prodCategoria").value;
+      const rar = qs("#prodRaridade").value;
+      const desc = qs("#prodDescricao").value.trim() || "Sem descrição.";
+      if(!nome || isNaN(preco) || isNaN(estoque)){
+        toast("Informe nome, preço e estoque válidos.", "error"); return;
+      }
+      const id = "PX"+Math.floor(1000+Math.random()*9000);
+      const card = document.createElement("div");
+      card.className = "card";
+      card.setAttribute("data-cat", cat);
+      const rarClass = rar==="Raro" ? "rar-rare" : rar==="Épico" ? "rar-epic" : rar==="Lendário" ? "rar-legendary" : "";
+      card.innerHTML = `
+        <div class="rarity ${rarClass}">${rar}</div>
+        <div class="card-header">${nome}</div>
+        <div class="card-body">
+          <div class="meta">
+            <span class="helper">${desc}</span>
+            <span class="price" data-price="${preco}">${formatBRL(preco)}</span>
+          </div>
+          <div class="stock">Estoque: ${estoque}</div>
+          <div class="btn-row">
+            <button class="btn btn-primary" data-id="${id}">Adicionar</button>
+            <button class="btn" data-view="${id}">Detalhes</button>
+          </div>
+        </div>
+      `;
+      qs("#productsGrid").prepend(card);
+      // bind novo botão
+      card.querySelector(".btn-primary").addEventListener("click",()=>{
+        addToCart(id,nome,preco,rar);
+      });
+      e.target.reset();
+      toast("Produto adicionado à vitrine.");
+    });
+  </script>
+</body>
+</html>
